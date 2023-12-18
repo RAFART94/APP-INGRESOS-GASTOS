@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block pageBase %}
+<h1>Esto es una lista de Ingresos y Gastos</h1>
+<table>
+    <tr>
+      <th>Fecha</th>
+      <th>Concepto</th>
+      <th>Monto</th>
+    </tr>
+    {% for item in data %}
+      <tr>
+        <td>{{ item.fecha }}</td>
+        <td>{{ item.concepto }}</td>
+        <td>{{ item.monto }}€</td>
+      </tr>
+    {% endfor %}
+   
+  </table>
+
+  <button>
+    <a href="/new">Nuevo Registro</a>
+  </button>
+{% endblock %}
