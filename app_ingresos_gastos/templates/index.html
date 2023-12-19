@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block pageBase %}
 <h1>Lista de Ingresos y Gastos</h1>
+
 <table>
     <tr>
       <th>Fecha</th>
       <th>Concepto</th>
       <th>Monto</th>
     </tr>
+
     {% for item in data %}
       <tr>
         <td>{{ item.fecha }}</td>
@@ -14,10 +16,12 @@
         <td>{{ item.monto }}€</td>
       </tr>
     {% endfor %}
+
    
   </table>
-
+  <br>
   <button>
     <a href="/new">Nuevo Registro</a>
   </button>
+  <br>
 {% endblock %}
