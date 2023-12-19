@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block pageBase %}
+<h1>Esto es {{tipoAccion}} de Ingresos y Gastos</h1>
+
+<form method="POST">
+    <label>Fecha:</label><br>
+    <input type="date" name="fecha"><br>
+    <label>Concepto:</label><br>
+    <input type="text" name="concepto"><br>
+    <label>Monto:</label><br>
+    <input type="number" name="monto"><br><br>
+    <button type="submit">{{tipoBoton}}</button><br>
+  </form>
+  <br>
+  <button>
+    <a href="/">Volver</a>
+  </button>
+  
+{% endblock %}
