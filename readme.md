@@ -21,6 +21,16 @@ pip install - requirements.txt
 
 ``set FLASK_APP=main.py``
 
+## Otra opción de ejecución
+-Crear un archivo .env y dentro agregar los siguientes:
+
+``FLASK_APP=main.py``
+``FLASK_DEBUG=True``
+
+-Y luego poder ejecutar en la terminal el comando:
+
+``flask run``
+
 ### Comando para ejecutar el servidor
 
 ``flask --app main run``

@@ -15,9 +15,9 @@ def index():
 
     return render_template('index.html', data = datos, titulo= 'Lista')
 
-@app.route('/new', methods= ['GET', 'POST'])
+@app.route('/new', methods= ['GET', 'POST']) 
 def new():
-    if request.method== 'POST':
+    if request.method == 'POST':
         hoy = str(date.today())#Esto quita la fecha de hoy
 
         if request.form['fecha'] > hoy:
