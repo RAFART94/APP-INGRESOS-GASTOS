@@ -9,12 +9,24 @@
     <label>Concepto:</label><br>
     <input type="text" name="concepto"><br>
     <label>Monto:</label><br>
-    <input type="number" name="monto"><br><br>
+    <input type="number" name="monto" step="0.01"><br><br>
     <button type="submit">{{tipoBoton}}</button><br>
   </form>
   <br>
   <button>
     <a href="/">Volver</a>
   </button>
+
+  <div style="color: red;">
+
+    
+      <ul>
+        {% for item in error %}
+          <li>*{{ item }}</li>
+        {% endfor %}
+      </ul>
+    
+
+  </div>
   
 {% endblock %}
