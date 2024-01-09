@@ -32,8 +32,14 @@ lectura.writerow(['24/04/2024','roscon de reyes','-40'])
 
 mifichero.close()
 '''
-
+'''
 from datetime import date
 
 print(type(str(date.today())))
 print(date.today())
+'''
+
+lista = [22,11,44,11,66,878]
+
+print(len(lista)-1)#obtener la ultima posición de una lista
+print(lista[len(lista)-1])#obtener el ultimo valor de una lista

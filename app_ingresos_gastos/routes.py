@@ -12,6 +12,7 @@ def index():
     csvReader = csv.reader(fichero, delimiter=',', quotechar='"')
     for items in csvReader:
         datos.append(items)
+    fichero.close()
 
     return render_template('index.html', data = datos, titulo= 'Lista')
 
@@ -24,12 +25,30 @@ def new():
         if comprobar_error:
             return render_template('new.html', titulo = 'Nuevo', tipoAccion = 'Registro', tipoBoton = 'Guardar', error = comprobar_error, dataForm = request.form)
         else:
+            #####################Generar el nuevo ID#################
+            lista_id = []
+            last_id = ''
+            new_id = 0
+            ficheroId = open('data/last_id.csv','r')
+            #accediendo a cada registro de archivo y darle formato
+            csvReaderId = csv.reader(ficheroId, delimiter=',', quotechar='"')
+            for items in csvReaderId:
+                lista_id.append(items[0])
+            ficheroId.close()
+            last_id = lista_id[len(lista_id)-1]#El último valor del Id
+            new_id = int(last_id)+1
+            #########################################Guardar el Id generado en last_id################
+            fichero_new_id = open('data/last_id.csv','w')
+            fichero_new_id.write(str(new_id))
+            fichero_new_id.close()
+
+            ###################################
             #acceder al archivo y configurar para la carga de nuevo registro
             mifichero = open('data/movimientos.csv', 'a', newline='')
             #llamar al metodo writer de escritura y configuramos formato
             lectura = csv.writer(mifichero, delimiter=',', quotechar='"')
             #registramos los datos recibidos en el archivo csv
-            lectura.writerow([request.form['fecha'], request.form['concepto'], request.form['monto']])
+            lectura.writerow([new_id, request.form['fecha'], request.form['concepto'], request.form['monto']])
             mifichero.close()
 
             return redirect('/')
