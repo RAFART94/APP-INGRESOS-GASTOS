@@ -38,8 +38,15 @@ from datetime import date
 print(type(str(date.today())))
 print(date.today())
 '''
-
+'''
 lista = [22,11,44,11,66,878]
 
 print(len(lista)-1)#obtener la ultima posición de una lista
 print(lista[len(lista)-1])#obtener el ultimo valor de una lista
+'''
+lista_csv = [5,'2024-04-01','fafggf',12121]
+lista_para_mostrar = []
+
+#lista_para_mostrar.append(lista_csv)
+lista_para_mostrar = lista_csv
+print(lista_para_mostrar[1])

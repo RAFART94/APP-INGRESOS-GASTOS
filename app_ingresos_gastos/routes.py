@@ -56,18 +56,20 @@ def new():
     else:#Si es GET
         return render_template('new.html', titulo = 'Nuevo', tipoAccion = 'Registro', tipoBoton = 'Guardar', dataForm = {})
 
-@app.route('/delete/<int:id>')
+@app.route('/delete/<int:id>', methods = ['GET', 'POST'])
 def delete(id):
-    miFicheroDelete = open('data/movimientos.csv', 'r')
-    lecturaDelete = csv.reader(miFicheroDelete, delimiter=',', quotechar='"')
-    registro_buscado = []
-    for item in lecturaDelete:
-        if item[0] == str(id):
-            #encuentro el Id buscado de mi registro
-            registro_buscado.append(item)
+    if request.method == 'GET':
+        miFicheroDelete = open('data/movimientos.csv', 'r')
+        lecturaDelete = csv.reader(miFicheroDelete, delimiter=',', quotechar='"')
+        registro_buscado = []
+        for item in lecturaDelete:
+            if item[0] == str(id):
+                registro_buscado = item
+        
+        return render_template('delete.html', titulo = 'Borrar', data = registro_buscado)
+    else:#post
+        return f'Esto debería eliminar el registro con el Id {id}'
     
-    return render_template('delete.html', titulo = 'Borrar', data = registro_buscado)
-
 @app.route('/update/<int:id>')
 def update(id):
     return f'El registro a editar es el de id: {id}'
