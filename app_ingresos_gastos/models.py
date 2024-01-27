@@ -16,15 +16,23 @@ def select_all():
 def select_by(id, condicion):
     miFicheroDelete = open(MOVIMIENTOS_FILE, 'r')
     lecturaDelete = csv.reader(miFicheroDelete, delimiter=',', quotechar='"')
-    registro_buscado = []
+    registro_buscado = None
     for item in lecturaDelete:
         if condicion == '==':
             if item[0] == str(id):
                 registro_buscado = item
-        else:
+        elif condicion == '!=':
+            registro_buscado = []
             if item[0] != str(id):#filtrando el id dado
                 registro_buscado.append(item)
-    
+        elif condicion == 'dic':
+            if item[0] == str(id):
+                registro_buscado = dict()
+                registro_buscado['id'] = item[0]#id
+                registro_buscado['fecha'] = item[1]#fecha
+                registro_buscado['concepto'] = item[2]#concepto
+                registro_buscado['monto'] = item[3]#monto
+
     miFicheroDelete.close()
     
     return registro_buscado
@@ -62,4 +70,20 @@ def insert(requestForm):
     lectura = csv.writer(mifichero, delimiter=',', quotechar='"')
     #registramos los datos recibidos en el archivo csv
     lectura.writerow([new_id, requestForm['fecha'], requestForm['concepto'], requestForm['monto']])
+    
     mifichero.close()
+
+def update_item(id, registros, requestForm):
+    nuevos_datos = []
+
+    for item in registros:
+        if item [0] == str(id):
+            nuevos_datos.append([id, requestForm['fecha'], requestForm['concepto'], requestForm['monto']])
+        else:
+            nuevos_datos.append(item)
+        
+    fichero_update = open(MOVIMIENTOS_FILE, 'w', newline='')
+    csv_writer = csv.writer(fichero_update, delimiter=',', quotechar='"')
+    csv_writer.writerows(nuevos_datos)
+
+    fichero_update.close()

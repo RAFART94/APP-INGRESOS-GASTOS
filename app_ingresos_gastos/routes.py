@@ -37,7 +37,6 @@ def delete(id):
         registros = select_by(id, '!=')
         delete_by(id, registros = registros)
 
-        
         return redirect('/')
 
 
@@ -45,19 +44,14 @@ def delete(id):
 @app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def update(id):
     if request.method == 'POST':
-        return f'se debe actualizar estos datos {request.form}'
+
+        registros = select_all()
+        update_item(id, registros, request.form)
+
+        return redirect('/')
     else:
 
-        miFicheroUpdate = open(MOVIMIENTOS_FILE, 'r')
-        lecturaUpdate = csv.reader(miFicheroUpdate, delimiter=',', quotechar='"')
-        registro_buscado = dict()
-        for item in lecturaUpdate:
-            if item[0] == str(id):
-                registro_buscado['id'] = item[0]#id
-                registro_buscado['fecha'] = item[1]#fecha
-                registro_buscado['concepto'] = item[2]#concepto
-                registro_buscado['monto'] = item[3]#monto
-
+        registro_buscado = select_by(id, 'dic')
 
         return render_template('update.html', titulo = 'Actualizar', tipoAccion = 'Actualización', tipoBoton = 'Editar', dataForm = registro_buscado, urlForm = f'/update/{id}')
 
