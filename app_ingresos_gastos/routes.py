@@ -54,7 +54,7 @@ def new():
             return redirect('/')
     
     else:#Si es GET
-        return render_template('new.html', titulo = 'Nuevo', tipoAccion = 'Registro', tipoBoton = 'Guardar', dataForm = {})
+        return render_template('new.html', titulo = 'Nuevo', tipoAccion = 'Registro', tipoBoton = 'Guardar', dataForm = {}, urlForm = '/new' )
 
 @app.route('/delete/<int:id>', methods = ['GET', 'POST'])
 def delete(id):
@@ -89,16 +89,24 @@ def delete(id):
 
 
     
-@app.route('/update/<int:id>')
+@app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def update(id):
+    if request.method == 'POST':
+        return f'se debe actualizar estos datos {request.form}'
+    else:
 
-    miFicheroUpdate = open(MOVIMIENTOS_FILE, 'r')
-    lecturaUpdate = csv.reader(miFicheroUpdate, delimiter=',', quotechar='"')
-    registro_buscado = []
-    for item in lecturaUpdate:
-        if item[0] == str(id):
-            registro_buscado = item
-    return render_template('update.html', titulo = 'Actualizar', tipoAccion = 'Actualización', tipoBoton = 'Editar', dataForm = registro_buscado)
+        miFicheroUpdate = open(MOVIMIENTOS_FILE, 'r')
+        lecturaUpdate = csv.reader(miFicheroUpdate, delimiter=',', quotechar='"')
+        registro_buscado = dict()
+        for item in lecturaUpdate:
+            if item[0] == str(id):
+                registro_buscado['id'] = item[0]#id
+                registro_buscado['fecha'] = item[1]#fecha
+                registro_buscado['concepto'] = item[2]#concepto
+                registro_buscado['monto'] = item[3]#monto
+
+
+        return render_template('update.html', titulo = 'Actualizar', tipoAccion = 'Actualización', tipoBoton = 'Editar', dataForm = registro_buscado, urlForm = f'/update/{id}')
 
 def validarFormulario(datosFormularios):
     errores = []#Crear lista para guardar errores
