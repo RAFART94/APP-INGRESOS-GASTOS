@@ -1,4 +1,4 @@
-from app_ingresos_gastos import app
+from app_ingresos_gastos import app, MOVIMIENTOS_FILE, LAST_ID_FILE
 from flask import render_template, request, redirect
 import csv
 from datetime import date
@@ -7,7 +7,7 @@ from datetime import date
 def index():
     datos = []
     #llamada al archivo csv
-    fichero = open('data/movimientos.csv','r')
+    fichero = open(MOVIMIENTOS_FILE,'r')
     #accediendo a cada registro de archivo y darle formato
     csvReader = csv.reader(fichero, delimiter=',', quotechar='"')
     for items in csvReader:
@@ -29,7 +29,7 @@ def new():
             lista_id = []
             last_id = ''
             new_id = 0
-            ficheroId = open('data/last_id.csv','r')
+            ficheroId = open(LAST_ID_FILE,'r')
             #accediendo a cada registro de archivo y darle formato
             csvReaderId = csv.reader(ficheroId, delimiter=',', quotechar='"')
             for items in csvReaderId:
@@ -38,13 +38,13 @@ def new():
             last_id = lista_id[len(lista_id)-1]#El último valor del Id
             new_id = int(last_id)+1
             #########################################Guardar el Id generado en last_id################
-            fichero_new_id = open('data/last_id.csv','w')
+            fichero_new_id = open(LAST_ID_FILE,'w')
             fichero_new_id.write(str(new_id))
             fichero_new_id.close()
 
             ###################################
             #acceder al archivo y configurar para la carga de nuevo registro
-            mifichero = open('data/movimientos.csv', 'a', newline='')
+            mifichero = open(MOVIMIENTOS_FILE, 'a', newline='')
             #llamar al metodo writer de escritura y configuramos formato
             lectura = csv.writer(mifichero, delimiter=',', quotechar='"')
             #registramos los datos recibidos en el archivo csv
@@ -59,7 +59,7 @@ def new():
 @app.route('/delete/<int:id>', methods = ['GET', 'POST'])
 def delete(id):
     if request.method == 'GET':
-        miFicheroDelete = open('data/movimientos.csv', 'r')
+        miFicheroDelete = open(MOVIMIENTOS_FILE, 'r')
         lecturaDelete = csv.reader(miFicheroDelete, delimiter=',', quotechar='"')
         registro_buscado = []
         for item in lecturaDelete:
@@ -69,15 +69,15 @@ def delete(id):
         return render_template('delete.html', titulo = 'Borrar', data = registro_buscado)
     else:#post
         #####################Lectura de archivo para quitar todos los datos excepto el del id dado#########################
-        fichero_lectura = open('data/movimientos.csv', 'r')
+        fichero_lectura = open(MOVIMIENTOS_FILE, 'r')
         csv_reader = csv.reader(fichero_lectura, delimiter=',', quotechar='"')
         registros = []
         for item in csv_reader:
             if item[0] != str(id):#filtrando el id dado
                 registros.append(item)
         fichero_lectura.close()
-    ######################################guardar el registro obtenido################################
-        fichero_guardar = open('data/movimientos.csv', 'w', newline='')
+        ###################################guardar el registro obtenido################################
+        fichero_guardar = open(MOVIMIENTOS_FILE, 'w', newline='')
         csv_writer = csv.writer(fichero_guardar, delimiter=',', quotechar='"')
         #registramos los datos recibidos en el archivo csv
         for datos in registros:
@@ -91,8 +91,14 @@ def delete(id):
     
 @app.route('/update/<int:id>')
 def update(id):
-    return f'El registro a editar es el de id: {id}'
-    #return render_template('update.html', titulo = 'Actualizar', tipoAccion = 'Actualización', tipoBoton = 'Editar', dataForm = {})
+
+    miFicheroUpdate = open(MOVIMIENTOS_FILE, 'r')
+    lecturaUpdate = csv.reader(miFicheroUpdate, delimiter=',', quotechar='"')
+    registro_buscado = []
+    for item in lecturaUpdate:
+        if item[0] == str(id):
+            registro_buscado = item
+    return render_template('update.html', titulo = 'Actualizar', tipoAccion = 'Actualización', tipoBoton = 'Editar', dataForm = registro_buscado)
 
 def validarFormulario(datosFormularios):
     errores = []#Crear lista para guardar errores
