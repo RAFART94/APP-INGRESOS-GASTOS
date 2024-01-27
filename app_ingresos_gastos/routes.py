@@ -68,7 +68,26 @@ def delete(id):
         
         return render_template('delete.html', titulo = 'Borrar', data = registro_buscado)
     else:#post
-        return f'Esto debería eliminar el registro con el Id {id}'
+        #####################Lectura de archivo para quitar todos los datos excepto el del id dado#########################
+        fichero_lectura = open('data/movimientos.csv', 'r')
+        csv_reader = csv.reader(fichero_lectura, delimiter=',', quotechar='"')
+        registros = []
+        for item in csv_reader:
+            if item[0] != str(id):#filtrando el id dado
+                registros.append(item)
+        fichero_lectura.close()
+    ######################################guardar el registro obtenido################################
+        fichero_guardar = open('data/movimientos.csv', 'w', newline='')
+        csv_writer = csv.writer(fichero_guardar, delimiter=',', quotechar='"')
+        #registramos los datos recibidos en el archivo csv
+        for datos in registros:
+            csv_writer.writerow(datos)
+
+        fichero_guardar.close()
+
+        return redirect('/')
+
+
     
 @app.route('/update/<int:id>')
 def update(id):
