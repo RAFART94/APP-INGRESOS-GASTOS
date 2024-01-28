@@ -3,32 +3,25 @@ from flask import render_template, request, redirect
 import csv
 from datetime import date
 from app_ingresos_gastos.models import *
-
 @app.route("/")
 def index():
     datos = select_all()
     return render_template('index.html', data = datos, titulo= 'Lista')
-
 @app.route('/new', methods= ['GET', 'POST']) 
 def new():
     if request.method == 'POST':
         
         comprobar_error = validarFormulario(request.form)
-
         if comprobar_error:
             return render_template('new.html', titulo = 'Nuevo', tipoAccion = 'Registro', tipoBoton = 'Guardar', error = comprobar_error, dataForm = request.form)
         else:
-
           insert(request.form)
-
           return redirect('/')  
     else:#Si es GET
         return render_template('new.html', titulo = 'Nuevo', tipoAccion = 'Registro', tipoBoton = 'Guardar', dataForm = {}, urlForm = '/new' )
-
 @app.route('/delete/<int:id>', methods = ['GET', 'POST'])
 def delete(id):
     if request.method == 'GET':
-
         registro_buscado = select_by(id, '==')
         
         return render_template('delete.html', titulo = 'Borrar', data = registro_buscado)
@@ -37,16 +30,22 @@ def delete(id):
         registros = select_by(id, '!=')
         delete_by(id, registros = registros)
 
+
         return redirect('/')
 
 
-    
+
 @app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def update(id):
     if request.method == 'POST':
 
+        comprobar_error = validarFormulario(request.form)
+        if comprobar_error:
+            return render_template('update.html', titulo = 'Actualizar', tipoAccion = 'Actualización', tipoBoton = 'Editar', error = comprobar_error, dataForm = request.form, urlForm = f'/update/{id}')
+
+        formulario = request.form
         registros = select_all()
-        update_item(id, registros, request.form)
+        update_item(id, registros, formulario)
 
         return redirect('/')
     else:
@@ -64,5 +63,4 @@ def validarFormulario(datosFormularios):
         errores.append('El concepto no puede ir vacío')
     if datosFormularios['monto'] == '' or float(datosFormularios['monto']) == 0.0:
         errores.append('El monto debe ser distinto de 0 y de vacío')
-
     return errores

@@ -1,6 +1,5 @@
 from app_ingresos_gastos import MOVIMIENTOS_FILE, LAST_ID_FILE
 import csv
-
 def select_all():
     datos = []
     #llamada al archivo csv
@@ -12,11 +11,10 @@ def select_all():
     fichero.close()
     
     return datos
-
 def select_by(id, condicion):
     miFicheroDelete = open(MOVIMIENTOS_FILE, 'r')
     lecturaDelete = csv.reader(miFicheroDelete, delimiter=',', quotechar='"')
-    registro_buscado = None
+    registro_buscado = []
     for item in lecturaDelete:
         if condicion == '==':
             if item[0] == str(id):
@@ -34,7 +32,7 @@ def select_by(id, condicion):
                 registro_buscado['monto'] = item[3]#monto
 
     miFicheroDelete.close()
-    
+
     return registro_buscado
 
 def delete_by(id, registros):
@@ -56,6 +54,7 @@ def insert(requestForm):
     for items in csvReaderId:
         lista_id.append(items[0])
     ficheroId.close()
+
     last_id = lista_id[len(lista_id)-1]#El último valor del Id
     new_id = int(last_id)+1
     #########################################Guardar el Id generado en last_id################
@@ -70,7 +69,6 @@ def insert(requestForm):
     lectura = csv.writer(mifichero, delimiter=',', quotechar='"')
     #registramos los datos recibidos en el archivo csv
     lectura.writerow([new_id, requestForm['fecha'], requestForm['concepto'], requestForm['monto']])
-    
     mifichero.close()
 
 def update_item(id, registros, requestForm):
@@ -81,7 +79,7 @@ def update_item(id, registros, requestForm):
             nuevos_datos.append([id, requestForm['fecha'], requestForm['concepto'], requestForm['monto']])
         else:
             nuevos_datos.append(item)
-        
+
     fichero_update = open(MOVIMIENTOS_FILE, 'w', newline='')
     csv_writer = csv.writer(fichero_update, delimiter=',', quotechar='"')
     csv_writer.writerows(nuevos_datos)
