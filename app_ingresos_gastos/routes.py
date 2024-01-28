@@ -7,6 +7,7 @@ from app_ingresos_gastos.models import *
 def index():
     datos = select_all()
     return render_template('index.html', data = datos, titulo= 'Lista')
+
 @app.route('/new', methods= ['GET', 'POST']) 
 def new():
     if request.method == 'POST':
@@ -19,6 +20,7 @@ def new():
           return redirect('/')  
     else:#Si es GET
         return render_template('new.html', titulo = 'Nuevo', tipoAccion = 'Registro', tipoBoton = 'Guardar', dataForm = {}, urlForm = '/new' )
+    
 @app.route('/delete/<int:id>', methods = ['GET', 'POST'])
 def delete(id):
     if request.method == 'GET':
@@ -32,8 +34,6 @@ def delete(id):
 
 
         return redirect('/')
-
-
 
 @app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def update(id):
